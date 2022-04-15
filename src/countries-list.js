@@ -7,6 +7,7 @@ const CountriesList = (props) => props.countries.map(
         return (
             <Country
                 key={country.area}
+                id={country.area}
                 name={country.name.official}
                 click={props.click}
             />

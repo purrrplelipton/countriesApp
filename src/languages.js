@@ -1,7 +1,13 @@
 import React from "react";
 
-const Languages = ({languages}) => Object.values(languages).map(
-    (language) => <p>{language}</p>
+const Languages = ({languages}) =>  Object.keys(languages).map(
+    language => {
+        return (
+            <li key={language}>
+                {languages[language]}
+            </li>
+        );
+    }
 );
 
 export default Languages;

@@ -20,11 +20,24 @@ const App = () => {
           countries: response.data
         });
       })}
-    )
-  }, []);
+    ).catch(err => console.log(err))
+  }, [items]);
 
-  const showInfo = (area) => {
+  const showDetails = (id) => {
+    let country = items.countries.find(country => country.area === id);
     
+    // console.log(
+    //   country,
+    //   `${String(new Date().getHours()).padStart(2,0)}:${String(new Date().getMinutes()).padStart(2,0)}:${String(new Date().getSeconds()).padStart(2,0)}`
+    // );
+    
+    setItems((prevState, props) => {
+      return ({
+        ...prevState,
+        showInfo: !prevState.showInfo,
+        query: country.name.common
+      });
+    });
   };
 
   const setQuery = (event) => {
@@ -48,7 +61,7 @@ const App = () => {
       <Filter
         query={items.query}
         countries={items.countries}
-        click={showInfo}
+        click={showDetails}
       />
     </div>
   );
