@@ -8,13 +8,16 @@ const App = () => {
   const [query, setQuery] = useState("");
   const [showInfo, setShowInfo] = useState(false);
 
+  const restCountriesUrl = `https://restcountries.com/v3.1/all`;
+
   useEffect(() => {
     axios
-      .get("https://restcountries.com/v3.1/all")
-      .then((response) => {
-        setCountries([...response.data]);
+      .get(restCountriesUrl)
+      .then((res) => {
+        if (res.data) return setCountries(res.data);
+        console.log("couldn't fetch data");
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.log("couldn't fetch data", err.message));
   }, []);
 
   const showDetails = (id) => {

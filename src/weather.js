@@ -1,41 +1,48 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+import OPENWEATHERMAP_API_KEY from "./OPENWEATHERMAP_API_KEY";
+
 import Aux from "./hoc/Auxiliary";
 
 const Weather = (props) => {
-  const [weatherObject, setWeatherObject] = useState({});
+  const [name, setName] = useState("");
+  const [temp, setTemp] = useState("");
+  const [icon, setIcon] = useState("");
+  const [description, setDescription] = useState("");
+  const [windSpeed, setWindSpeed] = useState("");
 
   const lat = props.lat;
-  const lng = props.lng;
-  const part = `alerts,daily,hourly,minutely`;
-  const unit = `metric`;
-  const lang = `en`;
-  const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&exclude=${part}&appid=${process.env.OPENWEATHERMAP_API_KEY}&${unit}&${lang}`;
+  const lon = props.lon;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}&units=metric&lang=en`;
 
   useEffect(() => {
     axios
       .get(url)
-      .then((response) => {
-        setWeatherObject({ ...response.data });
+      .then((res) => {
+        setName(res.data.name);
+        setTemp(res.data.main.temp);
+        setIcon(res.data.weather[0].icon);
+        setDescription(res.data.weather[0].description);
+        setWindSpeed(res.data.wind.speed);
       })
-      .catch((err) => console.log(err));
-  }, [url]);
+      .catch((err) => console.log("couldn't fetch data", err.message));
+  });
 
   return (
     <Aux>
       <h2>
-        Weather in <i>{weatherObject.timezone}</i>
+        Weather in <i>{name}</i>
       </h2>
       <h3>
-        Temperature: <i>{weatherObject.current.temp}</i>&deg;C
+        Temperature: <i>{temp}</i>&deg;C
       </h3>
       <img
-        src={`http://openweathermap.org/img/wn/${weatherObject.current.weather[0].icon}@4x.png`}
-        alt={`${weatherObject.current.weather[0].desrciption}`}
+        src={`http://openweathermap.org/img/wn/${icon}@4x.png`}
+        alt={description}
       />
       <h3>
-        Wind: <i>{weatherObject.current.wind_speed}</i>m/s
+        Wind: <i>{windSpeed}</i>m/s
       </h3>
     </Aux>
   );
